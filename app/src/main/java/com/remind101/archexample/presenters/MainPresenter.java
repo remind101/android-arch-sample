@@ -27,7 +27,6 @@ public class MainPresenter extends BasePresenter<List<Counter>, MainView> {
     public void bindView(@NonNull MainView view) {
         super.bindView(view);
 
-
         // Let's not reload data if it's already here
         if (model == null && !isLoadingData) {
             view().showLoading();
