@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class MvpRecyclerAdapter<M, P extends BasePresenter, VH extends MvpViewHolder> extends RecyclerView.Adapter<VH> {
-    final Map<Object, P> presenters;
+    protected final Map<Object, P> presenters;
 
     public MvpRecyclerAdapter() {
         presenters = new HashMap<>();
@@ -30,6 +30,15 @@ public abstract class MvpRecyclerAdapter<M, P extends BasePresenter, VH extends 
         super.onViewRecycled(holder);
 
         holder.unbindPresenter();
+    }
+
+    @Override
+    public boolean onFailedToRecycleView(VH holder) {
+        // Sometimes, if animations are running on the itemView's children, the RecyclerView won't
+        // be able to recycle the view. We should still unbind the presenter.
+        holder.unbindPresenter();
+
+        return super.onFailedToRecycleView(holder);
     }
 
     @Override
