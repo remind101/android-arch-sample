@@ -42,8 +42,11 @@ public class CounterDatabase {
 
     public void saveCounter(@NonNull Counter counter) {
         synchronized (counters) {
-            int id = nextId++;
-            counter.setId(id);
+            int id = counter.getId();
+            if (!counters.containsKey(counter.getId())) {
+                id = nextId++;
+                counter.setId(id);
+            }
             counters.put(id, counter);
         }
     }
