@@ -1,7 +1,5 @@
 package com.remind101.archexample;
 
-import android.os.Bundle;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.remind101.archexample.presenters.BasePresenter;
@@ -10,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class PresenterManager {
-    private static final String SIS_KEY_PRESENTER_ID = "presenter_id";
+
     private static PresenterManager instance;
 
     private final AtomicLong currentId;
@@ -33,16 +31,15 @@ public class PresenterManager {
         return instance;
     }
 
-    public <P extends BasePresenter<?, ?>> P restorePresenter(Bundle savedInstanceState) {
-        Long presenterId = savedInstanceState.getLong(SIS_KEY_PRESENTER_ID);
+    public <P extends BasePresenter<?, ?>> P restorePresenter(long presenterId) {
         P presenter = (P) presenters.getIfPresent(presenterId);
         presenters.invalidate(presenterId);
         return presenter;
     }
 
-    public void savePresenter(BasePresenter<?, ?> presenter, Bundle outState) {
+    public long savePresenter(BasePresenter<?, ?> presenter) {
         long presenterId = currentId.incrementAndGet();
         presenters.put(presenterId, presenter);
-        outState.putLong(SIS_KEY_PRESENTER_ID, presenterId);
+        return presenterId;
     }
 }
