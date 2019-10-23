@@ -16,9 +16,13 @@ import com.remind101.archexample.views.MainView;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MainView {
+
+    // Нумерация слоев внутри ViewAnimator (FrameLayout)
     private static final int POSITION_LIST = 0;
     private static final int POSITION_LOADING = 1;
     private static final int POSITION_EMPTY = 2;
+
+    private static final String SIS_KEY_PRESENTER_ID = "presenter_id";
 
     private ViewAnimator animator;
     private CounterAdapter adapter;
@@ -32,7 +36,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
         if (savedInstanceState == null) {
             presenter = new MainPresenter();
         } else {
-            presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter = PresenterManager
+                    .getInstance()
+                    .restorePresenter(savedInstanceState.getLong(SIS_KEY_PRESENTER_ID));
         }
 
         setContentView(R.layout.activity_list);
@@ -81,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        PresenterManager.getInstance().savePresenter(presenter, outState);
+        long presenterId = PresenterManager.getInstance().savePresenter(presenter);
+        outState.putLong(SIS_KEY_PRESENTER_ID, presenterId);
     }
 
     @Override
