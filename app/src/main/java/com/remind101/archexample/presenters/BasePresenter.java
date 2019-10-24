@@ -2,9 +2,12 @@ package com.remind101.archexample.presenters;
 
 import android.support.annotation.NonNull;
 
+import com.arellomobile.mvp.MvpPresenter;
+import com.arellomobile.mvp.MvpView;
+
 import java.lang.ref.WeakReference;
 
-public abstract class BasePresenter<M, V> {
+public abstract class BasePresenter<M, V extends MvpView> extends MvpPresenter<V>{
     protected M model;
     private WeakReference<V> view;
 

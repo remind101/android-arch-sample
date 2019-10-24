@@ -11,7 +11,6 @@ import android.widget.ViewAnimator;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.remind101.archexample.CounterAdapter;
-import com.remind101.archexample.PresenterManager;
 import com.remind101.archexample.R;
 import com.remind101.archexample.models.Counter;
 import com.remind101.archexample.moxy.presenter.MoxyMainPresenter;

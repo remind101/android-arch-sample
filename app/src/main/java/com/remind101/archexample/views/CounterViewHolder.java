@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.remind101.archexample.MvpViewHolder;
 import com.remind101.archexample.R;
 import com.remind101.archexample.models.Counter;
@@ -17,6 +18,9 @@ public class CounterViewHolder extends MvpViewHolder<CounterPresenter> implement
     private final ImageView minusButton;
     private final ImageView plusButton;
     @Nullable private OnCounterClickListener listener;
+
+    @InjectPresenter
+    public CounterPresenter presenter;
 
     public CounterViewHolder(View itemView) {
         super(itemView);

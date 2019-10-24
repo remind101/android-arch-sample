@@ -3,6 +3,7 @@ package com.remind101.archexample;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
+import com.arellomobile.mvp.MvpPresenter;
 import com.remind101.archexample.presenters.BasePresenter;
 
 import java.util.HashMap;
@@ -28,22 +29,18 @@ public abstract class MvpRecyclerAdapter<M, P extends BasePresenter, VH extends 
     @Override
     public void onViewRecycled(VH holder) {
         super.onViewRecycled(holder);
-
-        holder.unbindPresenter();
     }
 
     @Override
     public boolean onFailedToRecycleView(VH holder) {
         // Sometimes, if animations are running on the itemView's children, the RecyclerView won't
         // be able to recycle the view. We should still unbind the presenter.
-        holder.unbindPresenter();
 
         return super.onFailedToRecycleView(holder);
     }
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
-        holder.bindPresenter(getPresenter(getItem(position)));
     }
 
     protected abstract M getItem(int position);

@@ -1,20 +1,23 @@
 package com.remind101.archexample.presenters;
 
+import com.arellomobile.mvp.InjectViewState;
 import com.remind101.archexample.CounterDatabase;
 import com.remind101.archexample.models.Counter;
 import com.remind101.archexample.views.CounterView;
 
+@InjectViewState
 public class CounterPresenter extends BasePresenter<Counter, CounterView> {
     private static final int MIN_VALUE = 0;
     private static final int MAX_VALUE = 99;
 
     @Override
     protected void updateView() {
-        view().setCounterName(model.getName());
+
+        getViewState().setCounterName(model.getName());
         int value = model.getValue();
-        view().setCounterValue(value);
-        view().setMinusButtonEnabled(value > MIN_VALUE);
-        view().setPlusButtonEnabled(value < MAX_VALUE);
+        getViewState().setCounterValue(value);
+        getViewState().setMinusButtonEnabled(value > MIN_VALUE);
+        getViewState().setPlusButtonEnabled(value < MAX_VALUE);
     }
 
     public void onMinusButtonClicked() {
@@ -35,7 +38,7 @@ public class CounterPresenter extends BasePresenter<Counter, CounterView> {
 
     public void onCounterClicked() {
         if (setupDone()) {
-            view().goToDetailView(model);
+            getViewState().goToDetailView(model);
         }
     }
 }

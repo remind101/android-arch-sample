@@ -2,7 +2,6 @@ package com.remind101.archexample.moxy.presenter;
 
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -13,12 +12,27 @@ import com.remind101.archexample.moxy.IMoxyMainView;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @InjectViewState
 public class MoxyMainPresenter extends MvpPresenter<IMoxyMainView> {
 
     private boolean isLoadingData = false;
     private List<Counter> model = new ArrayList<>();
+
+    @Override
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+
+        // Let's not reload data if it's already here
+        if (model == null && !isLoadingData) {
+            getViewState().showLoading();
+            loadData();
+        }
+    }
+
+    @Override
+    public void attachView(IMoxyMainView view) {
+        super.attachView(view);
+    }
 
     public void setModel(List<Counter> model) {
         resetState();
@@ -33,17 +47,6 @@ public class MoxyMainPresenter extends MvpPresenter<IMoxyMainView> {
 
     private boolean setupDone() {
         return model != null;
-    }
-
-    @Override
-    protected void onFirstViewAttach() {
-        super.onFirstViewAttach();
-
-        // Let's not reload data if it's already here
-        if (model == null && !isLoadingData) {
-            getViewState().showLoading();
-            loadData();
-        }
     }
 
     private void updateView() {

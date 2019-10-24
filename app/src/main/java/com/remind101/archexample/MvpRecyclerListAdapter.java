@@ -1,5 +1,6 @@
 package com.remind101.archexample;
 
+import com.arellomobile.mvp.MvpPresenter;
 import com.remind101.archexample.presenters.BasePresenter;
 
 import java.util.ArrayList;
