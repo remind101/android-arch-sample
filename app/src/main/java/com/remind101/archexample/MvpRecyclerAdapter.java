@@ -25,7 +25,6 @@ public abstract class MvpRecyclerAdapter<M, P extends BasePresenter, VH extends 
 
     @NonNull protected abstract Object getModelId(@NonNull M model);
 
-
     @Override
     public void onViewRecycled(VH holder) {
         super.onViewRecycled(holder);

@@ -17,9 +17,10 @@ public class CounterAdapter extends MvpRecyclerListAdapter<Counter, CounterPrese
     @NonNull
     @Override
     protected CounterPresenter createPresenter(@NonNull Counter counter) {
-        CounterPresenter presenter = new CounterPresenter();
-        presenter.setModel(counter);
-        return presenter;
+//        CounterPresenter presenter = new CounterPresenter();
+//        presenter.setModel(counter);
+//        return presenter;
+        return null;
     }
 
     @NonNull

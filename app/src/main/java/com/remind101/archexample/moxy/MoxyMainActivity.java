@@ -4,11 +4,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ViewAnimator;
 
+import com.arellomobile.mvp.MvpActivity;
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.MvpDelegate;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.remind101.archexample.CounterAdapter;
 import com.remind101.archexample.R;
@@ -18,7 +22,7 @@ import com.remind101.archexample.moxy.presenter.MoxyPresenterManager;
 
 import java.util.List;
 
-public class MoxyMainActivity extends AppCompatActivity implements IMoxyMainView {
+public class MoxyMainActivity extends MvpAppCompatActivity implements IMoxyMainView {
 
     // Нумерация слоев внутри ViewAnimator (FrameLayout)
     private static final int POSITION_LIST = 0;
@@ -31,21 +35,22 @@ public class MoxyMainActivity extends AppCompatActivity implements IMoxyMainView
     private CounterAdapter adapter;
 
     @InjectPresenter
-    MoxyMainPresenter presenter;
+    public MoxyMainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            presenter = new MoxyMainPresenter();
-        } else {
-            presenter = MoxyPresenterManager
-                    .getInstance()
-                    .restorePresenter(savedInstanceState.getLong(SIS_KEY_PRESENTER_ID));
-        }
+//        if (savedInstanceState == null) {
+//            presenter = new MoxyMainPresenter();
+//        } else {
+//            presenter = MoxyPresenterManager
+//                    .getInstance()
+//                    .restorePresenter(savedInstanceState.getLong(SIS_KEY_PRESENTER_ID));
+//        }
 
         setContentView(R.layout.activity_list);
+
         animator = (ViewAnimator) findViewById(R.id.animator);
         RecyclerView recyclerView = (RecyclerView) animator.getChildAt(POSITION_LIST);
 
@@ -82,7 +87,8 @@ public class MoxyMainActivity extends AppCompatActivity implements IMoxyMainView
     }
 
     @Override
-    public void showCounters(List<Counter> counters) {
+    public void showCountersA(List<Counter> counters) {
+        Log.e("APP_TAG", "showCountersA: " + counters.size());
         adapter.clearAndAddAll(counters);
         animator.setDisplayedChild(POSITION_LIST);
     }

@@ -6,7 +6,12 @@ import com.remind101.archexample.models.Counter;
 import java.util.List;
 
 public interface IMoxyMainView extends MvpView {
-    void showCounters(List<Counter> counters);
+
+    void showCountersA(List<Counter> counters);
+
+
     void showLoading();
+
+
     void showEmpty();
 }

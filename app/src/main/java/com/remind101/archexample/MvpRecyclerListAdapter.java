@@ -11,6 +11,7 @@ public abstract class MvpRecyclerListAdapter<M, P extends BasePresenter, VH exte
     private final List<M> models;
 
     public MvpRecyclerListAdapter() {
+
         models = new ArrayList<>();
     }
 

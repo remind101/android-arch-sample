@@ -9,7 +9,6 @@ import com.remind101.archexample.presenters.BasePresenter;
 
 public abstract class MvpViewHolder<P extends BasePresenter> extends RecyclerView.ViewHolder {
 
-
     public MvpViewHolder(View itemView) {
         super(itemView);
     }
