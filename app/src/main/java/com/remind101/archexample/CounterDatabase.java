@@ -15,7 +15,7 @@ public class CounterDatabase {
 
     private final Map<Integer, Counter> counters;
 
-    private int nextId = 1;
+    private int nextId = 0;
 
     private CounterDatabase() {
         counters = new HashMap<>();

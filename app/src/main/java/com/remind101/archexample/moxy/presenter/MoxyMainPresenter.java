@@ -2,7 +2,6 @@ package com.remind101.archexample.moxy.presenter;
 
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -20,7 +19,6 @@ public class MoxyMainPresenter extends MvpPresenter<IMoxyMainView> {
     private List<Counter> model = new ArrayList<>();
 
     public MoxyMainPresenter() {
-
     }
 
     @Override
@@ -55,13 +53,11 @@ public class MoxyMainPresenter extends MvpPresenter<IMoxyMainView> {
     }
 
     private void updateView() {
-        Log.e("APP_TAG", "updateView: model size = " + model.size());
-
         // Business logic is in the presenter
         if (model.size() == 0) {
             getViewState().showEmpty();
         } else {
-            getViewState().showCountersA(model);
+            getViewState().showCounters(model);
         }
     }
 
@@ -75,12 +71,8 @@ public class MoxyMainPresenter extends MvpPresenter<IMoxyMainView> {
         counter.setName("New Counter");
         counter.setValue(0);
 
-        // Update view immediately
-        model.add(counter);
+        model.add(model.size(), counter);
         CounterDatabase.getInstance().saveCounter(counter);
-
-
-        Log.e("APP_TAG", "onAddCounterClicked: model size = " + model.size());
         updateView();
     }
 

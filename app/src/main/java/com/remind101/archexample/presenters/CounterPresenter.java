@@ -9,31 +9,31 @@ import com.remind101.archexample.views.CounterView;
 public class CounterPresenter extends BasePresenter<Counter, CounterView> {
     private static final int MIN_VALUE = 0;
     private static final int MAX_VALUE = 99;
+    private final int position;
+
+    public CounterPresenter(int position) {
+        model = CounterDatabase.getInstance().getCounter(position);
+        this.position = position;
+    }
 
     @Override
     protected void updateView() {
-
-        getViewState().setCounterName(model.getName());
-        int value = model.getValue();
+        int value = CounterDatabase.getInstance().getCounter(position).getValue();
         getViewState().setCounterValue(value);
         getViewState().setMinusButtonEnabled(value > MIN_VALUE);
         getViewState().setPlusButtonEnabled(value < MAX_VALUE);
     }
 
     public void onMinusButtonClicked() {
-        if (setupDone() && model.getValue() > MIN_VALUE) {
-            model.setValue(model.getValue() - 1);
-            CounterDatabase.getInstance().saveCounter(model);
-            updateView();
-        }
+        model.setValue(model.getValue() - 1);
+        CounterDatabase.getInstance().saveCounter(model);
+        updateView();
     }
 
     public void onPlusButtonClicked() {
-        if (setupDone() && model.getValue() < MAX_VALUE) {
-            model.setValue(model.getValue() + 1);
-            CounterDatabase.getInstance().saveCounter(model);
-            updateView();
-        }
+        model.setValue(model.getValue() + 1);
+        CounterDatabase.getInstance().saveCounter(model);
+        updateView();
     }
 
     public void onCounterClicked() {

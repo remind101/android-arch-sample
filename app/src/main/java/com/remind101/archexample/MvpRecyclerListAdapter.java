@@ -1,13 +1,12 @@
 package com.remind101.archexample;
 
-import com.arellomobile.mvp.MvpPresenter;
 import com.remind101.archexample.presenters.BasePresenter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class MvpRecyclerListAdapter<M, P extends BasePresenter, VH extends MvpViewHolder<P>> extends MvpRecyclerAdapter<M, P, VH> {
+public abstract class MvpRecyclerListAdapter<M, P extends BasePresenter, VH extends MvpViewHolder> extends MvpRecyclerAdapter<M, P, VH> {
     private final List<M> models;
 
     public MvpRecyclerListAdapter() {
@@ -91,7 +90,6 @@ public abstract class MvpRecyclerListAdapter<M, P extends BasePresenter, VH exte
     private void addInternal(M item) {
         System.err.println("Adding item " + getModelId(item));
         models.add(item);
-        presenters.put(getModelId(item), createPresenter(item));
     }
 
     @Override

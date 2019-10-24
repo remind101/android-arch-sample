@@ -6,28 +6,52 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.arellomobile.mvp.MvpDelegate;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.PresenterType;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.remind101.archexample.MvpViewHolder;
 import com.remind101.archexample.R;
 import com.remind101.archexample.models.Counter;
 import com.remind101.archexample.presenters.CounterPresenter;
 
-public class CounterViewHolder extends MvpViewHolder<CounterPresenter> implements CounterView {
+public class CounterViewHolder extends MvpViewHolder implements CounterView {
+    private final View listItemView;
     private final TextView counterName;
     private final TextView counterValue;
     private final ImageView minusButton;
     private final ImageView plusButton;
+
+    private int position = 0;
+
+
     @Nullable private OnCounterClickListener listener;
 
-    @InjectPresenter
+    @InjectPresenter(type = PresenterType.GLOBAL)
     public CounterPresenter presenter;
 
-    public CounterViewHolder(View itemView) {
-        super(itemView);
+
+    @ProvidePresenter(type = PresenterType.GLOBAL)
+    CounterPresenter providePresenter() {
+        return new CounterPresenter(position);
+    }
+
+    // Critical! Return this item unique id
+    @Override
+    protected String getMvpChildId() {
+        return listItemView == null ? null : Integer.toString(listItemView.getId());
+    }
+
+    public CounterViewHolder(MvpDelegate mParentDelegate, View itemView) {
+        super(mParentDelegate, itemView);
+
+        listItemView = itemView;
         counterName = (TextView) itemView.findViewById(R.id.counter_name);
         counterValue = (TextView) itemView.findViewById(R.id.counter_value);
         minusButton = (ImageView) itemView.findViewById(R.id.minus_button);
         plusButton = (ImageView) itemView.findViewById(R.id.plus_button);
+
+        createMvpDelegate();
 
         minusButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,12 +59,14 @@ public class CounterViewHolder extends MvpViewHolder<CounterPresenter> implement
                 presenter.onMinusButtonClicked();
             }
         });
+
         plusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 presenter.onPlusButtonClicked();
             }
         });
+
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,5 +110,14 @@ public class CounterViewHolder extends MvpViewHolder<CounterPresenter> implement
 
     public interface OnCounterClickListener {
         void onCounterClick(Counter counter);
+    }
+
+
+    public int getItemPosition() {
+        return position;
+    }
+
+    public void setItemPosition(int position) {
+        this.position = position;
     }
 }

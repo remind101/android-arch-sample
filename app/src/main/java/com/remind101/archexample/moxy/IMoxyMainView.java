@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IMoxyMainView extends MvpView {
 
-    void showCountersA(List<Counter> counters);
+    void showCounters(List<Counter> counters);
 
 
     void showLoading();

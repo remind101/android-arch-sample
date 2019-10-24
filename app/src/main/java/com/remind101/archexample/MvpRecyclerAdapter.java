@@ -21,7 +21,7 @@ public abstract class MvpRecyclerAdapter<M, P extends BasePresenter, VH extends 
         return presenters.get(getModelId(model));
     }
 
-    @NonNull protected abstract P createPresenter(@NonNull M model);
+//    @NonNull protected abstract P createPresenter(@NonNull M model);
 
     @NonNull protected abstract Object getModelId(@NonNull M model);
 

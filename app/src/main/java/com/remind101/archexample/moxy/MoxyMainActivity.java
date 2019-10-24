@@ -1,7 +1,6 @@
 package com.remind101.archexample.moxy;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,9 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ViewAnimator;
 
-import com.arellomobile.mvp.MvpActivity;
 import com.arellomobile.mvp.MvpAppCompatActivity;
-import com.arellomobile.mvp.MvpDelegate;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.remind101.archexample.CounterAdapter;
 import com.remind101.archexample.R;
@@ -41,14 +38,6 @@ public class MoxyMainActivity extends MvpAppCompatActivity implements IMoxyMainV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if (savedInstanceState == null) {
-//            presenter = new MoxyMainPresenter();
-//        } else {
-//            presenter = MoxyPresenterManager
-//                    .getInstance()
-//                    .restorePresenter(savedInstanceState.getLong(SIS_KEY_PRESENTER_ID));
-//        }
-
         setContentView(R.layout.activity_list);
 
         animator = (ViewAnimator) findViewById(R.id.animator);
@@ -57,6 +46,8 @@ public class MoxyMainActivity extends MvpAppCompatActivity implements IMoxyMainV
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new CounterAdapter();
+        adapter.init(getMvpDelegate());
+
         recyclerView.setAdapter(adapter);
     }
 
@@ -87,7 +78,7 @@ public class MoxyMainActivity extends MvpAppCompatActivity implements IMoxyMainV
     }
 
     @Override
-    public void showCountersA(List<Counter> counters) {
+    public void showCounters(List<Counter> counters) {
         Log.e("APP_TAG", "showCountersA: " + counters.size());
         adapter.clearAndAddAll(counters);
         animator.setDisplayedChild(POSITION_LIST);
