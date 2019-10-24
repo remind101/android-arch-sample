@@ -1,37 +1,57 @@
-package com.remind101.archexample.presenters;
+package com.remind101.archexample.moxy.presenter;
 
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 
-import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
 import com.remind101.archexample.CounterDatabase;
 import com.remind101.archexample.models.Counter;
-import com.remind101.archexample.views.MainView;
+import com.remind101.archexample.moxy.IMoxyMainView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainPresenter extends BasePresenter<List<Counter>, MainView> {
-    private boolean isLoadingData = false;
 
-    @Override
-    protected void updateView() {
-        // Business logic is in the presenter
-        if (model.size() == 0) {
-            view().showEmpty();
-        } else {
-            view().showCounters(model);
+@InjectViewState
+public class MoxyMainPresenter extends MvpPresenter<IMoxyMainView> {
+
+    private boolean isLoadingData = false;
+    private List<Counter> model = new ArrayList<>();
+
+    public void setModel(List<Counter> model) {
+        resetState();
+        this.model = model;
+        if (setupDone()) {
+            updateView();
         }
     }
 
+    private void resetState() {
+    }
+
+    private boolean setupDone() {
+        return model != null;
+    }
+
     @Override
-    public void bindView(@NonNull MainView view) {
-        super.bindView(view);
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
 
         // Let's not reload data if it's already here
         if (model == null && !isLoadingData) {
-            view().showLoading();
+            getViewState().showLoading();
             loadData();
+        }
+    }
+
+    private void updateView() {
+        // Business logic is in the presenter
+        if (model.size() == 0) {
+            getViewState().showEmpty();
+        } else {
+            getViewState().showCounters(model);
         }
     }
 

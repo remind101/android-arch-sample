@@ -30,6 +30,11 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     api 'com.google.guava:guava:28.1-android'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+
+    implementation 'tech.schoolhelper:moxy-x:1.7.0'
+    implementation 'tech.schoolhelper:moxy-x-app-compat:1.7.0'
+    annotationProcessor 'tech.schoolhelper:moxy-x-compiler:1.7.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
