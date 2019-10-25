@@ -9,4 +9,5 @@ public interface IMainView extends MvpView {
     void showCounters(List<Counter> counters);
     void showLoading();
     void showEmpty();
+    void showMenu(boolean state);
 }

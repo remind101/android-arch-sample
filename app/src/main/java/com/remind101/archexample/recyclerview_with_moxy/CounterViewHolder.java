@@ -1,4 +1,4 @@
-package com.remind101.archexample.views;
+package com.remind101.archexample.recyclerview_with_moxy;
 
 import android.graphics.Color;
 import android.view.View;
@@ -9,12 +9,7 @@ import com.arellomobile.mvp.MvpDelegate;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.PresenterType;
 import com.arellomobile.mvp.presenter.ProvidePresenterTag;
-import com.remind101.archexample.MvpViewHolder;
 import com.remind101.archexample.R;
-import com.remind101.archexample.models.Counter;
-import com.remind101.archexample.presenters.CounterPresenter;
-
-import static com.remind101.archexample.Utils.logIt;
 
 public class CounterViewHolder extends MvpViewHolder implements CounterView {
     private final View listItemView;
@@ -25,22 +20,19 @@ public class CounterViewHolder extends MvpViewHolder implements CounterView {
 
     private int position = 0;
 
-    private OnCounterClickListener listener;
-
     @InjectPresenter(type = PresenterType.GLOBAL)
     public CounterPresenter presenter;
 
+    /**
+     * Требуется для того чтобы сгенерировать уникальный тэг для презентера данного MvpView,
+     * то есть данного холдера. Если этого не сделать, то у всех холдеров будет один и тот же инстанс
+     * презентера и он будет ОДНОВРЕМЕННО обновлять их все ОДИНАКОВЫМИ данными ))
+     *
+     * https://github.com/Arello-Mobile/Moxy/wiki/Provides-Presenter-and-its-Tag
+     */
     @ProvidePresenterTag(presenterClass = CounterPresenter.class, type = PresenterType.GLOBAL)
     String provideRepositoryPresenterTag() {
-        String tag = Long.toString((long)hashCode() + System.currentTimeMillis());
-        logIt(tag);
-        return tag;
-    }
-
-    // Critical! Return this item unique id
-    @Override
-    protected String getMvpChildId() {
-        return listItemView == null ? null : Integer.toString(listItemView.getId());
+        return Long.toString((long)hashCode() + System.currentTimeMillis());
     }
 
     public CounterViewHolder(MvpDelegate mParentDelegate, View itemView) {
@@ -60,10 +52,6 @@ public class CounterViewHolder extends MvpViewHolder implements CounterView {
 
         plusButton.setOnClickListener( view -> {
             presenter.onPlusButtonClicked(position);
-        });
-
-        itemView.setOnClickListener(view -> {
-            presenter.onCounterClicked(position);
         });
     }
 
@@ -89,19 +77,15 @@ public class CounterViewHolder extends MvpViewHolder implements CounterView {
         plusButton.setClickable(enabled);
     }
 
-    @Override
-    public void goToDetailView(Counter counter) {
-        if (listener != null) {
-            listener.onCounterClick(counter);
-        }
-    }
-
-    public interface OnCounterClickListener {
-        void onCounterClick(Counter counter);
-    }
-
     public void bindPosition(int position) {
         this.position = position;
         presenter.onBindPosition(position);
+    }
+
+    // Critical! Return this item unique id
+    @Override
+    protected String getMvpChildId() {
+//        return listItemView == null ? null : Integer.toString(listItemView.getId());
+        return listItemView == null ? null : Long.toString(System.currentTimeMillis());
     }
 }

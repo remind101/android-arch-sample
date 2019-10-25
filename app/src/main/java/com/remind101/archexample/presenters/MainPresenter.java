@@ -63,9 +63,13 @@ public class MainPresenter extends MvpPresenter<IMainView> {
         new LoadDataTask().execute();
     }
 
+    // ID нового Counter генерится здесь как очередной порядковый номер в массиве.
+    // По этому ID Counter также сохраняется к кэше. Это для того, чтобы поддерживать
+    // совпадение индекса в списке, индекса элемента в RecyclerView и ID в кэше.
     public void onAddCounterClicked() {
         Counter counter = new Counter();
-        counter.setName("New Counter");
+        counter.setId(model.size());
+        counter.setName("New Counter " + model.size());
         counter.setValue(0);
 
         model.add(model.size(), counter);
@@ -76,6 +80,13 @@ public class MainPresenter extends MvpPresenter<IMainView> {
     // It's OK for this class not to be static and to keep a reference to the Presenter, as this
     // is retained during orientation changes and is lightweight (has no activity/view reference)
     private class LoadDataTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            getViewState().showMenu(false);
+        }
+
         @Override
         protected Void doInBackground(Void... params) {
             SystemClock.sleep(3000);
@@ -86,6 +97,7 @@ public class MainPresenter extends MvpPresenter<IMainView> {
         protected void onPostExecute(Void aVoid) {
             setModel(CounterDatabase.getInstance().getAllCounters());
             isLoadingData = false;
+            getViewState().showMenu(true);
         }
     }
 }

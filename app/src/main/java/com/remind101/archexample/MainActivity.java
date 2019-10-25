@@ -13,7 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.remind101.archexample.models.Counter;
 import com.remind101.archexample.moxy.presenter.MainPresenter;
 import com.remind101.archexample.presenters.IMainView;
-import com.remind101.archexample.presenters.PresenterManager;
+import com.remind101.archexample.recyclerview_with_moxy.CounterAdapter;
 
 import java.util.List;
 
@@ -24,10 +24,9 @@ public class MainActivity extends MvpAppCompatActivity implements IMainView {
     private static final int POSITION_LOADING = 1;
     private static final int POSITION_EMPTY = 2;
 
-    private static final String SIS_KEY_PRESENTER_ID = "presenter_id";
-
     private ViewAnimator animator;
     private CounterAdapter adapter;
+    private boolean menuStatus = false;
 
     @InjectPresenter
     public MainPresenter presenter;
@@ -52,6 +51,11 @@ public class MainActivity extends MvpAppCompatActivity implements IMainView {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+
+        for (int i = 0; i < menu.size(); i++) {
+            menu.getItem(i).setVisible(menuStatus);
+        }
+
         return true;
     }
 
@@ -70,8 +74,6 @@ public class MainActivity extends MvpAppCompatActivity implements IMainView {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        long presenterId = PresenterManager.getInstance().savePresenter(presenter);
-        outState.putLong(SIS_KEY_PRESENTER_ID, presenterId);
     }
 
     @Override
@@ -88,5 +90,11 @@ public class MainActivity extends MvpAppCompatActivity implements IMainView {
     @Override
     public void showEmpty() {
         animator.setDisplayedChild(POSITION_EMPTY);
+    }
+
+    @Override
+    public void showMenu(boolean state) {
+        menuStatus = state;
+        invalidateOptionsMenu();
     }
 }
