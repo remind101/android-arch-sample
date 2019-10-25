@@ -1,37 +1,60 @@
-package com.remind101.archexample.presenters;
+package com.remind101.archexample.moxy.presenter;
 
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
 
-import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
 import com.remind101.archexample.CounterDatabase;
 import com.remind101.archexample.models.Counter;
-import com.remind101.archexample.views.MainView;
+import com.remind101.archexample.presenters.IMainView;
 
 import java.util.List;
 
-public class MainPresenter extends BasePresenter<List<Counter>, MainView> {
+@InjectViewState
+public class MainPresenter extends MvpPresenter<IMainView> {
+
     private boolean isLoadingData = false;
+    private List<Counter> model;
 
     @Override
-    protected void updateView() {
-        // Business logic is in the presenter
-        if (model.size() == 0) {
-            view().showEmpty();
-        } else {
-            view().showCounters(model);
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+
+        // Let's not reload data if it's already here
+        if (model == null && !isLoadingData) {
+            getViewState().showLoading();
+            loadData();
         }
     }
 
     @Override
-    public void bindView(@NonNull MainView view) {
-        super.bindView(view);
+    public void attachView(IMainView view) {
+        super.attachView(view);
 
-        // Let's not reload data if it's already here
         if (model == null && !isLoadingData) {
-            view().showLoading();
+            getViewState().showLoading();
             loadData();
+        }
+    }
+
+    private void setModel(List<Counter> model) {
+
+        this.model = model;
+        if (setupDone()) {
+            updateView();
+        }
+    }
+
+    private boolean setupDone() {
+        return model != null;
+    }
+
+    private void updateView() {
+        if (model.size() == 0) {
+            getViewState().showEmpty();
+        } else {
+            getViewState().showCounters(model);
         }
     }
 
@@ -45,8 +68,7 @@ public class MainPresenter extends BasePresenter<List<Counter>, MainView> {
         counter.setName("New Counter");
         counter.setValue(0);
 
-        // Update view immediately
-        model.add(counter);
+        model.add(model.size(), counter);
         CounterDatabase.getInstance().saveCounter(counter);
         updateView();
     }

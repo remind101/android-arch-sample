@@ -1,8 +1,8 @@
-package com.remind101.archexample;
+package com.remind101.archexample.presenters;
 
+import com.arellomobile.mvp.MvpPresenter;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.remind101.archexample.presenters.BasePresenter;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -12,7 +12,7 @@ public class PresenterManager {
 
     private final AtomicLong currentId;
 
-    private final Cache<Long, BasePresenter<?, ?>> presenters;
+    private final Cache<Long, MvpPresenter<?>> presenters;
 
     private PresenterManager(long maxSize, long expirationValue, TimeUnit expirationUnit) {
 
@@ -33,13 +33,13 @@ public class PresenterManager {
         return instance;
     }
 
-    public <P extends BasePresenter<?, ?>> P restorePresenter(long presenterId) {
+    public <P extends MvpPresenter<?>> P restorePresenter(long presenterId) {
         P presenter = (P) presenters.getIfPresent(presenterId);
         presenters.invalidate(presenterId);
         return presenter;
     }
 
-    public long savePresenter(BasePresenter<?, ?> presenter) {
+    public long savePresenter(MvpPresenter<?> presenter) {
         long presenterId = currentId.incrementAndGet();
         presenters.put(presenterId, presenter);
         return presenterId;

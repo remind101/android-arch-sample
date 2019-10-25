@@ -1,7 +1,6 @@
 package com.remind101.archexample;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -9,13 +8,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ViewAnimator;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.remind101.archexample.models.Counter;
-import com.remind101.archexample.presenters.MainPresenter;
-import com.remind101.archexample.views.MainView;
+import com.remind101.archexample.moxy.presenter.MainPresenter;
+import com.remind101.archexample.presenters.IMainView;
+import com.remind101.archexample.presenters.PresenterManager;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends MvpAppCompatActivity implements IMainView {
 
     // Нумерация слоев внутри ViewAnimator (FrameLayout)
     private static final int POSITION_LIST = 0;
@@ -27,27 +29,22 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private ViewAnimator animator;
     private CounterAdapter adapter;
 
-    private MainPresenter presenter;
+    @InjectPresenter
+    public MainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            presenter = new MainPresenter();
-        } else {
-            presenter = PresenterManager
-                    .getInstance()
-                    .restorePresenter(savedInstanceState.getLong(SIS_KEY_PRESENTER_ID));
-        }
-
         setContentView(R.layout.activity_list);
-        animator = (ViewAnimator) findViewById(R.id.animator);
+
+        animator = findViewById(R.id.animator);
         RecyclerView recyclerView = (RecyclerView) animator.getChildAt(POSITION_LIST);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new CounterAdapter(null);
+        adapter = new CounterAdapter(getMvpDelegate());
+
         recyclerView.setAdapter(adapter);
     }
 
@@ -67,20 +64,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        presenter.bindView(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        presenter.unbindView();
     }
 
     @Override
