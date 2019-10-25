@@ -16,10 +16,7 @@ import java.util.List;
 public class MoxyMainPresenter extends MvpPresenter<IMoxyMainView> {
 
     private boolean isLoadingData = false;
-    private List<Counter> model = new ArrayList<>();
-
-    public MoxyMainPresenter() {
-    }
+    private List<Counter> model;
 
     @Override
     protected void onFirstViewAttach() {
@@ -35,17 +32,19 @@ public class MoxyMainPresenter extends MvpPresenter<IMoxyMainView> {
     @Override
     public void attachView(IMoxyMainView view) {
         super.attachView(view);
+
+        if (model == null && !isLoadingData) {
+            getViewState().showLoading();
+            loadData();
+        }
     }
 
-    public void setModel(List<Counter> model) {
-        resetState();
+    private void setModel(List<Counter> model) {
+
         this.model = model;
         if (setupDone()) {
             updateView();
         }
-    }
-
-    private void resetState() {
     }
 
     private boolean setupDone() {
@@ -53,7 +52,6 @@ public class MoxyMainPresenter extends MvpPresenter<IMoxyMainView> {
     }
 
     private void updateView() {
-        // Business logic is in the presenter
         if (model.size() == 0) {
             getViewState().showEmpty();
         } else {

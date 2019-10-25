@@ -13,19 +13,25 @@ public class CounterAdapter extends MvpRecyclerListAdapter<Counter, CounterPrese
 
     private MvpDelegate mParentDelegate;
 
+    public CounterAdapter(MvpDelegate mParentDelegate) {
+        this.mParentDelegate = mParentDelegate;
+    }
+
+    // Списку требуется создать новый элемент
     @Override
     public CounterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new CounterViewHolder(mParentDelegate, LayoutInflater.from(parent.getContext()).inflate(R.layout.counter_row, parent, false));
+        return new CounterViewHolder(
+                mParentDelegate,
+                LayoutInflater
+                        .from(parent.getContext()).inflate(R.layout.counter_row,
+                        parent,
+                        false));
     }
 
+    // Списку нужно заполнить данными элемент в позиции position
     @Override
     public void onBindViewHolder(CounterViewHolder holder, int position) {
-        holder.setItemPosition(position);
-        super.onBindViewHolder(holder, position);
-    }
-
-    public void init(MvpDelegate parentDelegate) {
-        mParentDelegate = parentDelegate;
+        holder.bindPosition(position);
     }
 
     @NonNull

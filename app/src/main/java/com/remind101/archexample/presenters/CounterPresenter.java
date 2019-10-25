@@ -9,12 +9,7 @@ import com.remind101.archexample.views.CounterView;
 public class CounterPresenter extends BasePresenter<Counter, CounterView> {
     private static final int MIN_VALUE = 0;
     private static final int MAX_VALUE = 99;
-    private final int position;
-
-    public CounterPresenter(int position) {
-        model = CounterDatabase.getInstance().getCounter(position);
-        this.position = position;
-    }
+    private int position;
 
     @Override
     protected void updateView() {
@@ -40,5 +35,13 @@ public class CounterPresenter extends BasePresenter<Counter, CounterView> {
         if (setupDone()) {
             getViewState().goToDetailView(model);
         }
+    }
+
+    public void onBindPosition(int position) {
+        this.position = position;
+        model = CounterDatabase.getInstance().getCounter(position);
+        getViewState().setCounterName(model.getName());
+        getViewState().setCounterValue(model.getValue());
+
     }
 }

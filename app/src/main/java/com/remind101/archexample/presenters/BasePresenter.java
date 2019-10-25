@@ -9,7 +9,7 @@ import java.lang.ref.WeakReference;
 
 public abstract class BasePresenter<M, V extends MvpView> extends MvpPresenter<V>{
     protected M model;
-    private WeakReference<V> view;
+    protected V view;
 
     public void setModel(M model) {
         resetState();
@@ -23,7 +23,7 @@ public abstract class BasePresenter<M, V extends MvpView> extends MvpPresenter<V
     }
 
     public void bindView(@NonNull V view) {
-        this.view = new WeakReference<>(view);
+        this.view = view;
         if (setupDone()) {
             updateView();
         }
@@ -34,11 +34,7 @@ public abstract class BasePresenter<M, V extends MvpView> extends MvpPresenter<V
     }
 
     protected V view() {
-        if (view == null) {
-            return null;
-        } else {
-            return view.get();
-        }
+        return view;
     }
 
     protected abstract void updateView();

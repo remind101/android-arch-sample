@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new CounterAdapter();
+        adapter = new CounterAdapter(null);
         recyclerView.setAdapter(adapter);
     }
 

@@ -40,13 +40,12 @@ public class MoxyMainActivity extends MvpAppCompatActivity implements IMoxyMainV
 
         setContentView(R.layout.activity_list);
 
-        animator = (ViewAnimator) findViewById(R.id.animator);
+        animator = findViewById(R.id.animator);
         RecyclerView recyclerView = (RecyclerView) animator.getChildAt(POSITION_LIST);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new CounterAdapter();
-        adapter.init(getMvpDelegate());
+        adapter = new CounterAdapter(getMvpDelegate());
 
         recyclerView.setAdapter(adapter);
     }
@@ -79,7 +78,6 @@ public class MoxyMainActivity extends MvpAppCompatActivity implements IMoxyMainV
 
     @Override
     public void showCounters(List<Counter> counters) {
-        Log.e("APP_TAG", "showCountersA: " + counters.size());
         adapter.clearAndAddAll(counters);
         animator.setDisplayedChild(POSITION_LIST);
     }

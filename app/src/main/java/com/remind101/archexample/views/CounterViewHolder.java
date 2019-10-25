@@ -24,16 +24,14 @@ public class CounterViewHolder extends MvpViewHolder implements CounterView {
 
     private int position = 0;
 
+    private OnCounterClickListener listener;
 
-    @Nullable private OnCounterClickListener listener;
-
-    @InjectPresenter(type = PresenterType.GLOBAL)
+    @InjectPresenter(type = PresenterType.GLOBAL, tag = "holder")
     public CounterPresenter presenter;
 
-
-    @ProvidePresenter(type = PresenterType.GLOBAL)
+    @ProvidePresenter(type = PresenterType.GLOBAL, tag = "holder")
     CounterPresenter providePresenter() {
-        return new CounterPresenter(position);
+        return new CounterPresenter();
     }
 
     // Critical! Return this item unique id
@@ -46,10 +44,10 @@ public class CounterViewHolder extends MvpViewHolder implements CounterView {
         super(mParentDelegate, itemView);
 
         listItemView = itemView;
-        counterName = (TextView) itemView.findViewById(R.id.counter_name);
-        counterValue = (TextView) itemView.findViewById(R.id.counter_value);
-        minusButton = (ImageView) itemView.findViewById(R.id.minus_button);
-        plusButton = (ImageView) itemView.findViewById(R.id.plus_button);
+        counterName = itemView.findViewById(R.id.counter_name);
+        counterValue = itemView.findViewById(R.id.counter_value);
+        minusButton = itemView.findViewById(R.id.minus_button);
+        plusButton = itemView.findViewById(R.id.plus_button);
 
         createMvpDelegate();
 
@@ -112,12 +110,8 @@ public class CounterViewHolder extends MvpViewHolder implements CounterView {
         void onCounterClick(Counter counter);
     }
 
-
-    public int getItemPosition() {
-        return position;
-    }
-
-    public void setItemPosition(int position) {
+    public void bindPosition(int position) {
         this.position = position;
+        presenter.onBindPosition(position);
     }
 }
