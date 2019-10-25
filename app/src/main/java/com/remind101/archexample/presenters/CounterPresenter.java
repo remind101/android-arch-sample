@@ -1,9 +1,13 @@
 package com.remind101.archexample.presenters;
 
+import android.util.Log;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.remind101.archexample.CounterDatabase;
 import com.remind101.archexample.models.Counter;
 import com.remind101.archexample.views.CounterView;
+
+import static com.remind101.archexample.Utils.logIt;
 
 @InjectViewState
 public class CounterPresenter extends BasePresenter<Counter, CounterView> {
@@ -19,19 +23,21 @@ public class CounterPresenter extends BasePresenter<Counter, CounterView> {
         getViewState().setPlusButtonEnabled(value < MAX_VALUE);
     }
 
-    public void onMinusButtonClicked() {
+    public void onMinusButtonClicked(int position) {
+        model = CounterDatabase.getInstance().getCounter(position);
         model.setValue(model.getValue() - 1);
         CounterDatabase.getInstance().saveCounter(model);
         updateView();
     }
 
-    public void onPlusButtonClicked() {
+    public void onPlusButtonClicked(int position) {
+        model = CounterDatabase.getInstance().getCounter(position);
         model.setValue(model.getValue() + 1);
         CounterDatabase.getInstance().saveCounter(model);
         updateView();
     }
 
-    public void onCounterClicked() {
+    public void onCounterClicked(int position) {
         if (setupDone()) {
             getViewState().goToDetailView(model);
         }
@@ -39,6 +45,8 @@ public class CounterPresenter extends BasePresenter<Counter, CounterView> {
 
     public void onBindPosition(int position) {
         this.position = position;
+
+        logIt("position=" +position+ ", hash=" + Integer.toString(this.hashCode()));
         model = CounterDatabase.getInstance().getCounter(position);
         getViewState().setCounterName(model.getName());
         getViewState().setCounterValue(model.getValue());

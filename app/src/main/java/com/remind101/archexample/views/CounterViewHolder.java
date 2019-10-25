@@ -1,7 +1,6 @@
 package com.remind101.archexample.views;
 
 import android.graphics.Color;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,11 +8,13 @@ import android.widget.TextView;
 import com.arellomobile.mvp.MvpDelegate;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.PresenterType;
-import com.arellomobile.mvp.presenter.ProvidePresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenterTag;
 import com.remind101.archexample.MvpViewHolder;
 import com.remind101.archexample.R;
 import com.remind101.archexample.models.Counter;
 import com.remind101.archexample.presenters.CounterPresenter;
+
+import static com.remind101.archexample.Utils.logIt;
 
 public class CounterViewHolder extends MvpViewHolder implements CounterView {
     private final View listItemView;
@@ -26,12 +27,14 @@ public class CounterViewHolder extends MvpViewHolder implements CounterView {
 
     private OnCounterClickListener listener;
 
-    @InjectPresenter(type = PresenterType.GLOBAL, tag = "holder")
+    @InjectPresenter(type = PresenterType.GLOBAL)
     public CounterPresenter presenter;
 
-    @ProvidePresenter(type = PresenterType.GLOBAL, tag = "holder")
-    CounterPresenter providePresenter() {
-        return new CounterPresenter();
+    @ProvidePresenterTag(presenterClass = CounterPresenter.class, type = PresenterType.GLOBAL)
+    String provideRepositoryPresenterTag() {
+        String tag = Long.toString((long)hashCode() + System.currentTimeMillis());
+        logIt(tag);
+        return tag;
     }
 
     // Critical! Return this item unique id
@@ -51,30 +54,17 @@ public class CounterViewHolder extends MvpViewHolder implements CounterView {
 
         createMvpDelegate();
 
-        minusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.onMinusButtonClicked();
-            }
+        minusButton.setOnClickListener( view -> {
+            presenter.onMinusButtonClicked(position);
         });
 
-        plusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.onPlusButtonClicked();
-            }
+        plusButton.setOnClickListener( view -> {
+            presenter.onPlusButtonClicked(position);
         });
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.onCounterClicked();
-            }
+        itemView.setOnClickListener(view -> {
+            presenter.onCounterClicked(position);
         });
-    }
-
-    public void setListener(@Nullable OnCounterClickListener listener) {
-        this.listener = listener;
     }
 
     @Override
