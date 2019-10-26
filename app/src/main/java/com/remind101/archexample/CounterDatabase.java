@@ -15,8 +15,6 @@ public class CounterDatabase {
 
     private final Map<Integer, Counter> counters;
 
-    private int nextId = 1;
-
     private CounterDatabase() {
         counters = new HashMap<>();
     }
@@ -42,9 +40,7 @@ public class CounterDatabase {
 
     public void saveCounter(@NonNull Counter counter) {
         synchronized (counters) {
-            int id = nextId++;
-            counter.setId(id);
-            counters.put(id, counter);
+            counters.put(counter.getId(), counter);
         }
     }
 }
