@@ -28,7 +28,6 @@ public class CounterPresenter extends MvpPresenter<CounterView> {
 
             if(value > MIN_VALUE) {
                 model.setValue(--value);
-                model.setValue(value);
                 CounterDatabase.getInstance().saveCounter(model);
                 updateView(value);
             }

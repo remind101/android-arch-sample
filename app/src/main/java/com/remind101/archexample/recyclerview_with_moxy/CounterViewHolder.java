@@ -44,15 +44,8 @@ public class CounterViewHolder extends MvpViewHolder implements CounterView {
         minusButton = itemView.findViewById(R.id.minus_button);
         plusButton = itemView.findViewById(R.id.plus_button);
 
-        createMvpDelegate();
-
-        minusButton.setOnClickListener( view -> {
-            presenter.onMinusButtonClicked(position);
-        });
-
-        plusButton.setOnClickListener( view -> {
-            presenter.onPlusButtonClicked(position);
-        });
+        getMvpDelegate().onCreate();
+        getMvpDelegate().onAttach();
     }
 
     @Override
@@ -78,14 +71,24 @@ public class CounterViewHolder extends MvpViewHolder implements CounterView {
     }
 
     public void bindPosition(int position) {
+//        destroyMvpDelegate();
+//        createMvpDelegate();
+
         this.position = position;
         presenter.onBindPosition(position);
+
+        minusButton.setOnClickListener( view -> {
+            presenter.onMinusButtonClicked(position);
+        });
+
+        plusButton.setOnClickListener( view -> {
+            presenter.onPlusButtonClicked(position);
+        });
     }
 
     // Critical! Return this item unique id
     @Override
     protected String getMvpChildId() {
-//        return listItemView == null ? null : Integer.toString(listItemView.getId());
-        return listItemView == null ? null : Long.toString(System.currentTimeMillis());
+        return listItemView == null ? null : Integer.toString(listItemView.getId());
     }
 }

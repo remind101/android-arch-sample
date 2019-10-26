@@ -18,7 +18,7 @@ import com.arellomobile.mvp.MvpDelegate;
 public abstract class MvpViewHolder extends RecyclerView.ViewHolder {
 
     protected MvpDelegate mMvpDelegate;
-    protected final MvpDelegate mParentDelegate;
+    protected MvpDelegate mParentDelegate;
 
     public MvpViewHolder(MvpDelegate<?> parentDelegate, final View itemView) {
         super(itemView);
